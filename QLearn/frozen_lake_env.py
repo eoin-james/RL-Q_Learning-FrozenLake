@@ -5,8 +5,9 @@ from gym.envs.toy_text import frozen_lake
 
 
 class Lake(frozen_lake.FrozenLakeEnv):
-    def __init__(self, render_mode: Optional[str] = None, desc=None, map_name="4x4", is_slippery=False):
+    def __init__(self, render_mode: Optional[str] = None, desc=None, map_name="4x4", is_slippery=False, seed=None):
         super().__init__(render_mode, desc, map_name, is_slippery)
+        self.action_space.seed(seed=seed)
 
         self.step_reward = -1.0
         self.hole_reward = -10.0

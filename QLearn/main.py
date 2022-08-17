@@ -1,5 +1,3 @@
-import random
-
 from utilis import *
 from rl_agent import QLearner
 from frozen_lake_env import Lake
@@ -7,9 +5,8 @@ from frozen_lake_env import Lake
 
 def main():
     # Set Seed
-    seed = np.random.randint(0, 1000)
+    seed = 123
     np.random.seed(seed)
-    random.seed(seed)
 
     # Bools
     verbose = True  # Print out results from each episode to console
@@ -26,7 +23,7 @@ def main():
     gamma = 0.9  # Q function discount factor
 
     # Hyper params - Env
-    max_steps = 50_000  # Max number of steps the agent can take
+    max_steps = 5_000  # Max number of steps the agent can take
     max_eps = 1.0  # Starting value for epsilon
     min_eps = 0.1  # Minimum value for epsilon
 
@@ -47,7 +44,8 @@ def main():
     # Create the environment
     env = Lake(
         render_mode=render,
-        map_name=map_dim
+        map_name=map_dim,
+        seed=seed
     )
 
     # Create the agent
@@ -71,7 +69,7 @@ def main():
     )
 
     # Save agents data
-    agent.save_table(f'./Tables/table_{map_dim}.csv') if save_q_table else None
+    agent.save_table(f'./Results/table_{map_dim}.csv') if save_q_table else None
 
     # Plot the results
     plot_results(results, wins) if not use_wandb else None

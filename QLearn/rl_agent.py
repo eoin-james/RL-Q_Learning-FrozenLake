@@ -33,23 +33,23 @@ class QLearner:
 
     def save_table(self, save_name):
         """
-        Save the current Q Table to the Tables directory as a CSV file
+        Save the current Q Table to the Results directory as a CSV file
         :param save_name: The name of the file
         :return: None
         """
         df = pd.DataFrame(self.q_table)
-        df.to_csv(f"Tables/{save_name}")
+        df.to_csv(f"Results/{save_name}")
 
     def load_table(self, table_name):
         """
-        Loads a pre-trained Q Table CSV file from the Tables directory
+        Loads a pre-trained Q Table CSV file from the Results directory
         :param table_name: The name of the file to load
         :return: None
         """
 
         # Tray to load the file
         try:
-            self.q_table = pd.read_csv(f"Tables/{table_name}")[["0", "1", "2", "3"]].to_numpy()
+            self.q_table = pd.read_csv(f"Results/{table_name}")[["0", "1", "2", "3"]].to_numpy()
 
         # Create an empty table if failed
         except FileNotFoundError('Location not valid - Loading empty Q Table'):

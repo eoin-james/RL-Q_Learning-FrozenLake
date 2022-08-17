@@ -66,11 +66,12 @@ def main():
         min_eps,
         seed,
         verbose,
-        training
+        training,
+        use_wandb
     )
 
     # Save agents data
-    agent.save_table(f'Tables/table_{map_dim}.csv') if save_q_table else None
+    agent.save_table(f'./Tables/table_{map_dim}.csv') if save_q_table else None
 
     # Plot the results
     plot_results(results, wins) if not use_wandb else None

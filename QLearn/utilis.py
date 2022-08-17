@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-def game(agent, env, max_steps, max_eps, min_eps, seed, verbose, training):
+def game(agent, env, max_steps, max_eps, min_eps, seed, verbose, training, use_wandb):
     rewards = []
     goals = []
     total_r = 0
@@ -59,8 +59,7 @@ def game(agent, env, max_steps, max_eps, min_eps, seed, verbose, training):
                     "Win Count": wins,
                     "Epsilon": eps
                 }
-
-            )
+            ) if use_wandb else None
 
             total_r, episode_steps = 0, 0
             env.reset(seed=seed)

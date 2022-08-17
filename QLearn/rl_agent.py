@@ -7,13 +7,13 @@ class QLearner:
     RL agent - In basic RL the Agent is a Q-Table
     """
 
-    def __init__(self, obs_space, alpha, gamma):
+    def __init__(self, obs_space, hyper_params):
 
         self.obs_space = obs_space
         self.q_table = np.zeros((self.obs_space, 4))
 
-        self.alpha = alpha
-        self.gamma = gamma
+        self.alpha = hyper_params['lr']
+        self.gamma = hyper_params['Y']
 
     def train(self, s, a, r, n_s):
         """

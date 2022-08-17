@@ -1,71 +1,57 @@
+import argparse
 from utilis import *
 from rl_agent import QLearner
 from frozen_lake_env import Lake
 
 
 def main():
+    hyper_params = {
+        'seed': 123,
+
+        'lr': 0.5,  # Agent learning rate
+        'Y': 0.9,  # Q function discount factor
+        'max_steps': 50_000,  # Max number of steps the agent can take
+        'max_eps': 1.0,  # Starting value for epsilon
+        'min_eps': 0.05,  # Minimum value for epsilon
+
+        'map_size': '8x8',  # Map size: '8x8' or '4x4' or 'None
+        'render_mode': 'single_rgb_array',  # Render on screen with 'human' else 'single_rgb_array'
+        'project_name': 'Q-learning-frozen-lake',  # Project name
+        'desc': None,  # Custom map
+
+        'verbose': True,  # Print episode results
+        'training': True,  # Train new agent else try load one for inference
+        'WandB': False,  # Track on WandB else display using Matplotlib
+    }
+
     # Set Seed
-    seed = 123
-    np.random.seed(seed)
+    np.random.seed(hyper_params['seed'])
 
     # Bools
-    verbose = True  # Print out results from each episode to console
-    training = True  # Train the agent or not -  if not agent
-    use_wandb = False  # If to use Weights and Biases for experiment tracking else use matplotlib
-    save_q_table = False  # Whether to save the Q table after training
-
-    #
-    render = 'single_rgb_array'  # Env display mode: "render_modes": "human", "ansi", "rgb_array", "single_rgb_array"
-    map_dim = "8x8"  # Dimension of Lake 4x4, 8x8, None
-
-    # Hyper params - Agent
-    alpha = 0.5  # Agent learning rate
-    gamma = 0.9  # Q function discount factor
-
-    # Hyper params - Env
-    max_steps = 5_000  # Max number of steps the agent can take
-    max_eps = 1.0  # Starting value for epsilon
-    min_eps = 0.1  # Minimum value for epsilon
+    # save_q_table = False  # Whether to save the Q table after training
 
     # Weights and Biases
-    if use_wandb:
+    if hyper_params['WandB']:
         # Initialise project and track hyper params
-        wandb.init(project="Q-learning-frozen-lake")
-        wandb.config = {
-            "seed": seed,
-            "alpha": alpha,
-            "gamma": gamma,
-            "steps": max_steps,
-            "map size": map_dim,
-            "max epsilon": max_eps,
-            "min epsilon": min_eps
-        }
+        wandb.init(project=hyper_params['project_name'])
+        wandb.config = hyper_params
 
     # Create the environment
     env = Lake(
-        render_mode=render,
-        map_name=map_dim,
-        seed=seed
+        hyper_params
     )
 
     # Create the agent
     agent = QLearner(
         env.observation_space.n,  # Number of states in the Env
-        alpha,
-        gamma
+        hyper_params
     )
 
     # Let the agent interact with the environment
     results, wins = game(
         agent,
         env,
-        max_steps,
-        max_eps,
-        min_eps,
-        seed,
-        verbose,
-        training,
-        use_wandb
+        hyper_params
     )
 
     # Save agents data
@@ -77,3 +63,23 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+    # parser = argparse.ArgumentParser(
+    #     description="Q Learning"
+    # )
+    #
+    # parser.add_argument(
+    #     '-s', '--seed', type=int, default=default['seed'], help="Seed for random number generators"
+    # )
+    #
+    # parser.add_argument(
+    #     '-v', '--verbose', type=bool, default=default['verbose'],
+    #     help="Bool for whether to display episode results in the console or not"
+    # )
+    # parser.add_argument('-t', '--train', type=bool, default=True, help="Bool for whether to train a new agent or load "
+    #                                                                    "a pre-trained one and disable training")
+    # parser.add_argument('-a', '--learning_rate', type=float, default=0.5, help="Agents learning rate")
+    # parser.add_argument('-y', '--discount', type=float, default=0.9, help="Value function discount factor")
+    # parser.add_argument()
+    # parser.add_argument()
+    # parser.add_argument()

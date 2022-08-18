@@ -22,11 +22,12 @@ def game(agent, env, hyper_params):
             action = env.action_space.sample()
         else:
             action = agent(state)
+
         next_state, reward, done, _, _ = env.step(action)
 
+        agent.train(state, action, reward, next_state) if hyper_params['training'] else None
+
         total_r += reward
-        if hyper_params['training']:
-            agent.train(state, action, reward, next_state)
         state = next_state
 
         if done:

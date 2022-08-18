@@ -10,7 +10,7 @@ class QLearner:
     def __init__(self, obs_space, hyper_params):
 
         self.obs_space = obs_space
-        self.q_table = np.zeros((self.obs_space, 4))
+        self.q_table = np.zeros((self.obs_space, 4)) if hyper_params['training'] else self.load_table(hyper_params)
 
         self.alpha = hyper_params['lr']
         self.gamma = hyper_params['Y']
@@ -31,29 +31,23 @@ class QLearner:
 
         # self.q_table[s, a] = self.q_table[s, a] + self.alpha *
 
-    def save_table(self, save_name):
-        """
-        Save the current Q Table to the Results directory as a CSV file
-        :param save_name: The name of the file
-        :return: None
-        """
+    def save_table(self, st_hp):
+
         df = pd.DataFrame(self.q_table)
-        df.to_csv(f"Results/{save_name}")
+        df.to_csv(f'../Results/table_{st_hp["seed"]}_{st_hp["map_size"]}.csv')
 
-    def load_table(self, table_name):
-        """
-        Loads a pre-trained Q Table CSV file from the Results directory
-        :param table_name: The name of the file to load
-        :return: None
-        """
+    def load_table(self, lt_hp):
 
-        # Tray to load the file
+        # Try to load the file
         try:
-            self.q_table = pd.read_csv(f"Results/{table_name}")[["0", "1", "2", "3"]].to_numpy()
+            print(f"Using - Results/table_{lt_hp['seed']}_{lt_hp['map_size']}")
+            return pd.read_csv(f"../Results/table_{lt_hp['seed']}_{lt_hp['map_size']}.csv")[["0", "1", "2", "3"]].to_numpy()
 
         # Create an empty table if failed
-        except FileNotFoundError('Location not valid - Loading empty Q Table'):
-            self.q_table = np.zeros((self.obs_space, 4))
+        except FileNotFoundError:  # 'Location not valid - Loading empty Q Table'
+            print('File not found loading empty table and enabling training')
+            lt_hp['training'] = True
+            return np.zeros((self.obs_space, 4))
 
     def __call__(self, obs):
         """

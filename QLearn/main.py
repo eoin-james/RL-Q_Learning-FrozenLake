@@ -1,12 +1,12 @@
-import argparse
 from utilis import *
 from rl_agent import QLearner
 from frozen_lake_env import Lake
 
 
 def main():
+    # Storing all data here so data can be passed around easier
     hyper_params = {
-        'seed': 123,
+        'seed': 1,
 
         'lr': 0.5,  # Agent learning rate
         'Y': 0.9,  # Q function discount factor
@@ -14,25 +14,21 @@ def main():
         'max_eps': 1.0,  # Starting value for epsilon
         'min_eps': 0.05,  # Minimum value for epsilon
 
-        'map_size': '8x8',  # Map size: '8x8' or '4x4' or 'None
-        'render_mode': 'single_rgb_array',  # Render on screen with 'human' else 'single_rgb_array'
+        'map_size': None,  # Map size: '8x8' or '4x4' or None for random map
+        'render_mode': 'human',  # Render on screen with 'human' else 'single_rgb_array'
         'project_name': 'Q-learning-frozen-lake',  # Project name
-        'desc': None,  # Custom map
+        'desc': None,  # Custom map - map_size must be set None
 
         'verbose': True,  # Print episode results
-        'training': True,  # Train new agent else try load one for inference
+        'training': False,  # Train new agent else try load one for inference
         'WandB': False,  # Track on WandB else display using Matplotlib
     }
 
-    # Set Seed
+    # Set Random Seed
     np.random.seed(hyper_params['seed'])
 
-    # Bools
-    # save_q_table = False  # Whether to save the Q table after training
-
-    # Weights and Biases
+    # Weights and Biases - Initialise project and track hyper params
     if hyper_params['WandB']:
-        # Initialise project and track hyper params
         wandb.init(project=hyper_params['project_name'])
         wandb.config = hyper_params
 
@@ -54,32 +50,12 @@ def main():
         hyper_params
     )
 
-    # Save agents data
-    agent.save_table(f'./Results/table_{map_dim}.csv') if save_q_table else None
+    # Save agents data - table_seed_map_size
+    agent.save_table(hyper_params)
 
     # Plot the results
-    plot_results(results, wins) if not use_wandb else None
+    plot_results(results, wins) if not hyper_params['WandB'] else None
 
 
 if __name__ == '__main__':
     main()
-
-    # parser = argparse.ArgumentParser(
-    #     description="Q Learning"
-    # )
-    #
-    # parser.add_argument(
-    #     '-s', '--seed', type=int, default=default['seed'], help="Seed for random number generators"
-    # )
-    #
-    # parser.add_argument(
-    #     '-v', '--verbose', type=bool, default=default['verbose'],
-    #     help="Bool for whether to display episode results in the console or not"
-    # )
-    # parser.add_argument('-t', '--train', type=bool, default=True, help="Bool for whether to train a new agent or load "
-    #                                                                    "a pre-trained one and disable training")
-    # parser.add_argument('-a', '--learning_rate', type=float, default=0.5, help="Agents learning rate")
-    # parser.add_argument('-y', '--discount', type=float, default=0.9, help="Value function discount factor")
-    # parser.add_argument()
-    # parser.add_argument()
-    # parser.add_argument()

@@ -15,7 +15,12 @@ class Lake(frozen_lake.FrozenLakeEnv):
 
         left, down, right, up = 0, 1, 2, 3
 
-        desc = frozen_lake.MAPS[hyper_params['map_size']]
+        if hyper_params['map_size'] is None:
+            desc = frozen_lake.generate_random_map()
+        else:
+            desc = frozen_lake.MAPS[hyper_params['map_size']]
+
+        # desc = frozen_lake.MAPS[hyper_params['map_size']]
         self.desc = desc = np.asarray(desc, dtype="c")
         self.n_row, self.n_col = n_row, n_col = desc.shape
 

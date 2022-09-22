@@ -6,7 +6,7 @@ from frozen_lake_env import Lake
 def main():
     # Storing all data here so data can be passed around easier
     hyper_params = {
-        'seed': 1,
+        'seed': 10,
 
         'lr': 0.5,  # Agent learning rate
         'Y': 0.9,  # Q function discount factor
@@ -18,6 +18,7 @@ def main():
         'render_mode': 'human',  # Render on screen with 'human' else 'single_rgb_array'
         'project_name': 'Q-learning-frozen-lake',  # Project name
         'desc': None,  # Custom map - map_size must be set None
+        'slip': True,  # Makes state transition function stochastic
 
         'verbose': True,  # Print episode results
         'training': False,  # Train new agent else try load one for inference
@@ -36,6 +37,7 @@ def main():
     env = Lake(
         hyper_params
     )
+
 
     # Create the agent
     agent = QLearner(

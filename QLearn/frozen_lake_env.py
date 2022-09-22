@@ -6,7 +6,13 @@ from gym.envs.toy_text import frozen_lake
 
 class Lake(frozen_lake.FrozenLakeEnv):
     def __init__(self, hyper_params):
-        super().__init__(hyper_params['render_mode'], hyper_params['desc'], hyper_params['map_size'], is_slippery=False)
+        super().__init__(
+            hyper_params['render_mode'],
+            hyper_params['desc'],
+            hyper_params['map_size'],
+            # is_slippery=hyper_params['slip']
+            is_slippery=True
+        )
         self.action_space.seed(seed=hyper_params['seed'])
 
         self.step_reward = -1.0

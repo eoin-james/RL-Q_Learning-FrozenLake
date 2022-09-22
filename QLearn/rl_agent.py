@@ -26,6 +26,7 @@ class QLearner:
         :param n_s: Next state after taking action 'a' at state 's'
         :return: None
         """
+        # Bellman equation for the optimal Q function
         self.q_table[s, a] = \
             self.q_table[s, a] * (1 - self.alpha) + self.alpha * (r + self.gamma * np.max(self.q_table[n_s, :]))
 
